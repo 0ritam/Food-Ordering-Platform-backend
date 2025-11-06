@@ -12,18 +12,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// CORS configuration for production
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://your-vercel-app.vercel.app', // Replace with your actual Vercel URL
-];
-
+// CORS configuration - allow localhost and all Vercel deployments
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+    // Allow localhost and all vercel.app domains
+    if (origin.includes('localhost') || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
